@@ -1,86 +1,81 @@
 ```mermaid
 classDiagram
-    class Customer {
-        -String name
-        -String phone
-        -String address
-        -String membershipId
-        +register()
-        +update()
-        +delete()
-        +getDiscounts()
-    }
-
-    class Order {
-        -String orderId
-        -DateTime orderTime
-        -double totalAmount
-        -String status
-        -String paymentMethod
-        +calculateTotal()
-        +updateStatus()
-        +addToCart()
-        +confirmOrder()
-    }
-
-    class Product {
-        -String name
-        -double price
-        -String type
-        -int preparationTime
-        +updatePrice()
-        +updateDetails()
-    }
-
-    class SingleProduct {
-        -List~String~ ingredients
-        -int calories
+    class Book {
+        -String title
+        -String author
+        -int publicationYear
         -String category
-        +getIngredients()
-        +updateIngredients()
+        -String ISBN
+        -String location
+        -String loanStatus
+        +updateStatus()
+        +getDetails()
+        +searchByTitle()
+        +searchByAuthor()
+        +searchByCategory()
     }
 
-    class ComboProduct {
-        -List~SingleProduct~ items
-        +addItem()
-        +removeItem()
-        +calculateComboPrice()
+    class BookRegistration {
+        -DateTime registrationDate
+        -String registeredBy
+        -String bookCondition
+        -String acquisitionMethod
+        +registerNewBook()
+        +updateBookInfo()
+        +removeBook()
+        +generateRegistrationNumber()
+        +validateISBN()
     }
 
-    class OrderHistory {
-        -List~Order~ orders
-        -DateTime orderDate
-        -double totalSpent
-        +viewHistory()
-        +getOrderDetails()
+    class User {
+        -String name
+        -String address
+        -String phone
+        -String email
+        -String membershipId
+        -int numberOfBorrowedBooks
+        +updateInfo()
+        +searchByName()
+        +searchByAddress()
     }
 
-    class Staff {
+    class LoanRecord {
+        -DateTime loanDate
+        -DateTime dueDate
+        -DateTime returnDate
+        -double fineAmount
+        +calculateFine()
+        +updateStatus()
+        +checkDueDate()
+    }
+
+    class LibraryStaff {
         -String staffId
         -String name
-        -String role
-        +manageOrders()
-        +updateOrderStatus()
-        +checkInventory()
+        -String position
+        +checkUserInfo()
+        +updateBookRecord()
+        +processLoan()
+        +processReturn()
+        +checkLoanStatus()
+        +manageBookRegistration()
     }
 
-    class Supplier {
-        -String name
-        -String address
-        -List~Product~ suppliedProducts
-        -double price
-        +updateInfo()
-        +addNewProduct()
-        +updatePrice()
+    class LibraryStatus {
+        -int totalBooks
+        -int totalUsers
+        -int loanedBooks
+        -int staffCount
+        +updateStatus()
+        +generateReport()
+        +checkAvailableBooks()
     }
 
-    Customer "1" -- "0..*" Order : places
-    Customer "1" -- "1" OrderHistory : has
-    Order "1" -- "1..*" Product : contains
-    Product <|-- SingleProduct : extends
-    Product <|-- ComboProduct : extends
-    Staff "1" -- "0..*" Order : manages
-    Supplier "1" -- "0..*" Product : supplies
-    Order "0..*" -- "1" OrderHistory : recorded in
-    LibraryStatus "1" --> "*" Book : tracks
-    LibraryStatus "1" --> "*" User : tracks
+    User "1" -- "0..*" LoanRecord : has
+    Book "1" -- "0..*" LoanRecord : associated with
+    LibraryStaff "1" -- "0..*" LoanRecord : manages
+    LibraryStaff "1" -- "0..*" Book : manages
+    LibraryStaff "1" -- "0..*" User : manages
+    LibraryStatus "1" -- "1" LibraryStaff : monitors
+    BookRegistration "1" -- "1" Book : registers
+    LibraryStaff "1" -- "0..*" BookRegistration : performs
