@@ -40,8 +40,6 @@ classDiagram
     }
 
     class LoanHistory {
-        -Book book
-        -User user
         -DateTime loanDate
         -DateTime returnDate
         -double fineAmount
